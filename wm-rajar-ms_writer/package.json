@@ -1,0 +1,25 @@
+{
+  "name": "wm-rajar-ms_writer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simplon-alt-dist-p7/wm-rajar-ms_writer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/simplon-alt-dist-p7/wm-rajar-ms_writer/issues"
+  },
+  "homepage": "https://github.com/simplon-alt-dist-p7/wm-rajar-ms_writer#readme",
+  "dependencies": {
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19"
+  }
+}

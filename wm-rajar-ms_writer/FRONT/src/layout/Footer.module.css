@@ -1,0 +1,18 @@
+.footer {
+  background: var(--color-primary);
+  color: var(--color-bg-light);
+  text-align: center;
+  border-top: 3px solid var(--color-primary);
+  width: 100vw;
+}
+
+.footerContent {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+}
+
+.footerContent p {
+  margin: 0;
+  font-size: 0.9rem;
+}

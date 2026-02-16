@@ -1,0 +1,33 @@
+.article-card {
+  border: 2px solid #294c79;
+  background-color: #7b93b1;
+  color: white;
+  padding: 16px;
+  margin: 12px 0;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.article-title {
+  margin: 0 0 8px 0;
+  font-size: 1.2rem;
+}
+
+.article-subtitle {
+  margin: 8px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.article-date {
+  color: white; 
+  font-size: 0.9rem; 
+  margin-top: 8px;
+}
+
+.edit-button {
+  position: absolute;
+  left: 75%;
+}
+
