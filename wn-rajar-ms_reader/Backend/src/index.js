@@ -4,13 +4,14 @@ const app = express();
 const cors = require("cors");
 const articlesRoutes = require("./routes/articles");
 
-const allowedOrigins = process.env.FRONTEND_URL
-  ? [process.env.FRONTEND_URL, "http://localhost:5173"]
-  : ["http://localhost:5173"];
-
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      const allowed = ["http://localhost:5173", process.env.FRONTEND_URL].filter(Boolean);
+      if (allowed.includes(origin)) return callback(null, true);
+      return callback(null, false);
+    },
     methods: ["GET", "POST", "DELETE"],
     credentials: true,
   }),
