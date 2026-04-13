@@ -5,6 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/database.js";
 import routes from "./routes/index.js";
+import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
 
@@ -36,6 +37,11 @@ app.get("/health", (req: Request, res: Response) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+app.use(errorHandler);
+
+// Export de l'app pour les tests
+export { app };
+
 const startServer = async () => {
   try {
     await connectDB();
@@ -48,4 +54,6 @@ const startServer = async () => {
   }
 };
 
-startServer();
+if (process.env.NODE_ENV !== 'test') {
+  startServer();
+}

@@ -1,0 +1,2 @@
+npm run lint --prefix wm-rajar-ms_writer/FRONT
+npm run lint --prefix wn-rajar-ms_reader/Frontend

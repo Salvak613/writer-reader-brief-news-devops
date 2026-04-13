@@ -1,10 +1,56 @@
 import { articleRepository } from "../repository/article.repository.js";
 import { Article } from "../models/article.model.js";
-import type { UpdateArticleDTO } from "../types/article.types.js";
+import type { CreateArticleDTO, UpdateArticleDTO } from "../types/article.types.js";
 
 class ArticleService {
   async getArticleById(id: number): Promise<Article | null> {
     return await articleRepository.findById(id);
+  }
+
+  async createArticle(data: CreateArticleDTO): Promise<Article> {
+    if (!data.title || data.title.trim().length === 0) {
+      throw new Error("Le titre est requis");
+    }
+    if (data.title.length > 300) {
+      throw new Error("Le titre ne peut pas dépasser 300 caractères");
+    }
+
+    if (!data.subtitle || data.subtitle.trim().length === 0) {
+      throw new Error("Le sous-titre est requis");
+    }
+    if (data.subtitle.length > 300) {
+      throw new Error("Le sous-titre ne peut pas dépasser 300 caractères");
+    }
+
+    if (!data.subhead || data.subhead.trim().length === 0) {
+      throw new Error("Le chapeau est requis");
+    }
+    if (data.subhead.length > 1000) {
+      throw new Error("Le chapeau ne peut pas dépasser 1000 caractères");
+    }
+
+    if (!data.body || data.body.trim().length === 0) {
+      throw new Error("Le contenu est requis");
+    }
+
+    if (!data.categoryId) {
+      throw new Error("Une catégorie est requise");
+    }
+
+    const existingArticle = await articleRepository.findByTitle(data.title.trim());
+    if (existingArticle) {
+      throw new Error("Un article avec ce titre existe déjà");
+    }
+
+    const sanitizedData: CreateArticleDTO = {
+      title: data.title.trim(),
+      subtitle: data.subtitle.trim(),
+      subhead: data.subhead.trim(),
+      body: data.body.trim(),
+      categoryId: data.categoryId,
+    };
+
+    return await articleRepository.create(sanitizedData);
   }
 
   async updateArticle(
@@ -24,7 +70,7 @@ class ArticleService {
     }
 
     if (data.title !== undefined) {
-      if (data.title.length === 0) {
+      if (data.title.trim().length === 0) {
         throw new Error("Le titre ne peut pas être vide");
       }
       if (data.title.length > 300) {
@@ -60,9 +106,37 @@ class ArticleService {
       sanitizedData.subtitle = data.subtitle.trim();
     if (data.subhead !== undefined) sanitizedData.subhead = data.subhead.trim();
     if (data.body !== undefined) sanitizedData.body = data.body.trim();
+    if (data.categoryId !== undefined) {
+      sanitizedData.category = { id: data.categoryId } as any;
+    }
+
+    // Mise à jour de la date de modification (en UTC)
+    sanitizedData.update_date = new Date(new Date().toISOString());
 
     return await articleRepository.update(id, sanitizedData);
   }
+
+  async softDeleteArticle(
+    id: number,
+  ): Promise<Article | null>{
+    const article = await articleRepository.findById(id);
+    if (!article){
+      return null;
+    };
+
+    await articleRepository.softDelete(id);
+    return articleRepository.findById(id);
+  }
+
+  async restoreArticle(id: number): Promise<Article | null> {
+    const article = await articleRepository.findById(id);
+    if (!article){
+      return null;
+    };
+    await articleRepository.restore(id);
+    return articleRepository.findById(id);
+  }
+
 }
 
 export const articleService = new ArticleService();

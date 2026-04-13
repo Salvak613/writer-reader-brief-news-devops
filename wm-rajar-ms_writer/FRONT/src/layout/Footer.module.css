@@ -2,17 +2,29 @@
   background: var(--color-primary);
   color: var(--color-bg-light);
   text-align: center;
-  border-top: 3px solid var(--color-primary);
-  width: 100vw;
+  width: 100%;
+  margin-top: auto;
 }
 
 .footerContent {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 1.25rem 2rem;
 }
 
 .footerContent p {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footerContent {
+    padding: 1rem;
+  }
+
+  .footerContent p {
+    font-size: 0.8rem;
+  }
 }

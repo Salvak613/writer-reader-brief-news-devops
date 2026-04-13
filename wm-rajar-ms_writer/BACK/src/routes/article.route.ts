@@ -6,19 +6,34 @@ import { searchArticles } from "../controller/article-search.controller.js";
 const router = Router();
 
 // Récupérer tous les articles
-router.get("/articles", getAllArticles);
+router.get("/", getAllArticles);
+
+// Créer un article
+router.post("/", (req, res) =>
+  articleController.createArticle(req, res)
+);
 
 // Rechercher des articles
-router.get("/articles/search", searchArticles);
+router.get("/search", searchArticles);
 
 // Récupérer un article par ID
-router.get("/articles/:id", (req, res) =>
+router.get("/:id", (req, res) =>
   articleController.getArticle(req, res)
 );
 
 // Mettre à jour un article
-router.patch("/articles/:id", (req, res) =>
+router.patch("/:id", (req, res) =>
   articleController.updateArticle(req, res)
+);
+
+// Supprimer un article
+router.patch("/:id/delete", (req, res) =>
+  articleController.softDeleteArticle(req, res)
+);
+
+// Restorer un article
+router.patch("/:id/restore", (req, res) =>
+  articleController.restoreArticle(req, res)
 );
 
 export default router;

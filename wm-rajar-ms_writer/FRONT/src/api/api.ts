@@ -38,6 +38,8 @@ class ApiService {
       const response = await fetch(url, config);
 
       if (!response.ok) {
+        const text = await response.text(); // ou json si tu sais que c'est du JSON
+        console.error("API Response body:", text);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 

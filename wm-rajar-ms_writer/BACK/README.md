@@ -2,7 +2,7 @@
 
 ## Description
 
-API backend pour le projet wm-rajar-ms_writer, construite avec Express et TypeScript.
+API backend pour le projet wm-rajar-ms_writer, construite avec Express et TypeScript. Sert à la gestion des articles, des catégories et l'implémentation d'un assistant IA.
 
 ## Prérequis
 
@@ -66,6 +66,27 @@ BACK/
 ├── package.json   # Dépendances et scripts
 └── tsconfig.json  # Configuration TypeScript
 ```
+
+## Routes API
+#### Articles :
+- `GET /articles/` : récupération de tous les articles
+- `GET /articles/:id` : récupération d'un article spécifique
+- `GET /articles/search` : recherche d'un article
+- `POST /articles/` : création d'un article
+- `PATCH /articles/:id` : mise à jour d'un article
+- `PATCH /articles/:id/delete` : suppression (softdelete) d'un article
+- `PATCH /articles/:id` : restoration d'un article
+
+#### Catégories :
+- `GET /categories/` : récupération de toutes les catégories
+- `GET /categories/:id` : récupération d'une catégorie spécifique
+
+#### IA :
+- `POST /gemini/generate-titre` : généreration d'un titre à partir du corps de l'article
+- `POST /gemini/generate-sous-titre` : généreration d'un sous-titre à partir du corps et du titre de l'article
+- `POST /gemini/generate-chapeau` : généreration d'un chapeau à partir du corps de l'article
+- `POST /gemini/generate-body` : correction et reformulation du corps de l'article
+
 
 ## Technologies utilisées
 

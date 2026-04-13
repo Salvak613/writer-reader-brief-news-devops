@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - ./wn-rajar-ms_reader/Db/worldnews.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./wn-rajar-ms_reader/Db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+      - ./wn-rajar-ms_reader/Db/seed-comments.sql:/docker-entrypoint-initdb.d/03-comments.sql
+
+  db-test:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: worldnews_test
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./wn-rajar-ms_reader/Db/worldnews.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./wn-rajar-ms_reader/Db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+      - ./wn-rajar-ms_reader/Db/seed-comments.sql:/docker-entrypoint-initdb.d/03-comments.sql
+
+  reader-back:
+    build: ./wn-rajar-ms_reader/Backend
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
+    depends_on:
+      - db
+
+  writer-back:
+    build: ./wm-rajar-ms_writer/BACK
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      FRONTEND_URL: http://localhost:5174
+    depends_on:
+      - db
+
+  reader-front:
+    build: ./wn-rajar-ms_reader/Frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - reader-back
+
+  writer-front:
+    build: ./wm-rajar-ms_writer/FRONT
+    ports:
+      - "5174:80"
+    depends_on:
+      - writer-back

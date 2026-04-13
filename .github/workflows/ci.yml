@@ -1,0 +1,63 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Writer Backend
+        run: npm install --prefix wm-rajar-ms_writer/BACK
+
+      - name: Install Writer Frontend
+        run: npm install --prefix wm-rajar-ms_writer/FRONT
+
+      - name: Install Reader Backend
+        run: npm install --prefix wn-rajar-ms_reader/Backend
+
+      - name: Install Reader Frontend
+        run: npm install --prefix wn-rajar-ms_reader/Frontend
+
+      - name: Lint Writer Frontend
+        run: npm run lint --prefix wm-rajar-ms_writer/FRONT
+
+      - name: Lint Reader Frontend
+        run: npm run lint --prefix wn-rajar-ms_reader/Frontend
+
+      - name: Test Writer Backend
+        run: npm test --prefix wm-rajar-ms_writer/BACK
+
+      - name: Test Writer Frontend
+        run: npm test --prefix wm-rajar-ms_writer/FRONT
+
+      - name: Test Reader Backend
+        run: npm test --prefix wn-rajar-ms_reader/Backend
+
+      - name: Test Reader Frontend
+        run: npm test --prefix wn-rajar-ms_reader/Frontend
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Deploy Writer Backend
+        run: curl -s "${{ secrets.RENDER_DEPLOY_WRITER_BACK }}"
+
+      - name: Deploy Writer Frontend
+        run: curl -s "${{ secrets.RENDER_DEPLOY_WRITER_FRONT }}"
+
+      - name: Deploy Reader Backend
+        run: curl -s "${{ secrets.RENDER_DEPLOY_READER_BACK }}"
+
+      - name: Deploy Reader Frontend
+        run: curl -s "${{ secrets.RENDER_DEPLOY_READER_FRONT }}"

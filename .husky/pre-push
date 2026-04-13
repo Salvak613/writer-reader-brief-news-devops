@@ -1,0 +1,5 @@
+npm run test --prefix wm-rajar-ms_writer/FRONT
+npm run test --prefix wm-rajar-ms_writer/BACK
+
+npm run test --prefix wn-rajar-ms_reader/Backend
+npm run test --prefix wn-rajar-ms_reader/Frontend

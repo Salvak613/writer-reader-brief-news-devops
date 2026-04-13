@@ -3,6 +3,7 @@ export interface CreateArticleDTO {
   subtitle: string;
   subhead: string;
   body: string;
+  categoryId: number;
 }
 
 export interface UpdateArticleDTO {
@@ -10,4 +11,5 @@ export interface UpdateArticleDTO {
   subtitle?: string;
   subhead?: string;
   body?: string;
+  categoryId?: number;
 }

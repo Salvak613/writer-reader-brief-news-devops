@@ -15,6 +15,7 @@ export const searchArticles = async (req: Request, res: Response) => {
         const articles = AppDataSource.getRepository(Article);
         // On crée une requête pour chercher les articles correspondant au mot-clé 
         const matchedArticles = await articles.createQueryBuilder("article")
+            .leftJoinAndSelect("article.category", "category")
             .where("article.title ILIKE :query OR article.subtitle ILIKE :query OR article.subhead ILIKE :query OR article.body ILIKE :query", 
                 { query: `%${query}%` })
                 // ILIKE insensible à la casse 

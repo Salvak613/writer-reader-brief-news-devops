@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={styles.footerContent}>
         <p>World News</p>
-        <p> Raphaël A, Alexis, Jules, Aline, Raphaël E</p>
+        <p>Raphaël A, Alexis, Jules, Aline, Raphaël E</p>
       </div>
     </footer>
   );

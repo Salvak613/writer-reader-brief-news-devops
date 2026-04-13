@@ -1,6 +1,9 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import Layout from "./layout/Layout";
-import App from "./App";
 import ArticleList from "./pages/ArticleList/ArticleList";
 import CreateArticle from "./pages/CreateArticle";
 import EditArticle from "./pages/EditArticle";
@@ -12,18 +15,18 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <App />,
+        element: <Navigate to="/articles" replace />, // En attendant d'avoir une vrai epage d'accueil
       },
       {
         path: "/articles",
         element: <ArticleList />,
       },
       {
-        path: "/create",
+        path: "/articles/create",
         element: <CreateArticle />,
       },
       {
-        path: "/edit/:id",
+        path: "/articles/:id/edit",
         element: <EditArticle />,
       },
     ],
