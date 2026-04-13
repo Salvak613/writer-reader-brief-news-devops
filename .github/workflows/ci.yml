@@ -43,7 +43,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Init worldnews schema
         run: psql -h localhost -U postgres -d worldnews -f wn-rajar-ms_reader/Db/worldnews.sql
@@ -58,14 +58,14 @@ jobs:
           PGPASSWORD: postgres
 
       - name: Init worldnews_test schema
-        run: psql -h localhost -U postgres -d worldnews_test -f wn-rajar-ms_reader/Db/worldnews.sql
+        run: psql -h localhost -p 5433 -U postgres -d worldnews_test -f wn-rajar-ms_reader/Db/worldnews.sql
         env:
           PGPASSWORD: postgres
 
       - name: Seed worldnews_test
         run: |
-          psql -h localhost -U postgres -d worldnews_test -f wn-rajar-ms_reader/Db/seed.sql
-          psql -h localhost -U postgres -d worldnews_test -f wn-rajar-ms_reader/Db/seed-comments.sql
+          psql -h localhost -p 5433 -U postgres -d worldnews_test -f wn-rajar-ms_reader/Db/seed.sql
+          psql -h localhost -p 5433 -U postgres -d worldnews_test -f wn-rajar-ms_reader/Db/seed-comments.sql
         env:
           PGPASSWORD: postgres
 
