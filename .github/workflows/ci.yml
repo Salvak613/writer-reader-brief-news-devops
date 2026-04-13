@@ -9,11 +9,65 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: worldnews
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      postgres-test:
+        image: postgres:16
+        env:
+          POSTGRES_DB: worldnews_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      - name: Init worldnews schema
+        run: psql -h localhost -U postgres -d worldnews -f wn-rajar-ms_reader/Db/worldnews.sql
+        env:
+          PGPASSWORD: postgres
+
+      - name: Seed worldnews
+        run: |
+          psql -h localhost -U postgres -d worldnews -f wn-rajar-ms_reader/Db/seed.sql
+          psql -h localhost -U postgres -d worldnews -f wn-rajar-ms_reader/Db/seed-comments.sql
+        env:
+          PGPASSWORD: postgres
+
+      - name: Init worldnews_test schema
+        run: psql -h localhost -U postgres -d worldnews_test -f wn-rajar-ms_reader/Db/worldnews.sql
+        env:
+          PGPASSWORD: postgres
+
+      - name: Seed worldnews_test
+        run: |
+          psql -h localhost -U postgres -d worldnews_test -f wn-rajar-ms_reader/Db/seed.sql
+          psql -h localhost -U postgres -d worldnews_test -f wn-rajar-ms_reader/Db/seed-comments.sql
+        env:
+          PGPASSWORD: postgres
 
       - name: Install Writer Backend
         run: npm install --prefix wm-rajar-ms_writer/BACK
@@ -35,12 +89,24 @@ jobs:
 
       - name: Test Writer Backend
         run: npm test --prefix wm-rajar-ms_writer/BACK
+        env:
+          NODE_ENV: test
+          DB_HOST: localhost
+          DB_PORT: 5433
+          DB_NAME: worldnews_test
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          PORT: 3001
+          FRONTEND_URL: http://localhost:5173
 
       - name: Test Writer Frontend
         run: npm test --prefix wm-rajar-ms_writer/FRONT
 
       - name: Test Reader Backend
         run: npm test --prefix wn-rajar-ms_reader/Backend
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5433/worldnews_test
+          PORT: 3000
 
       - name: Test Reader Frontend
         run: npm test --prefix wn-rajar-ms_reader/Frontend
