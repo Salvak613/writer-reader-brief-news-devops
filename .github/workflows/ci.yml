@@ -78,6 +78,10 @@ jobs:
       - name: Install Reader Backend
         run: npm install --prefix wn-rajar-ms_reader/Backend
 
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        working-directory: wn-rajar-ms_reader/Backend
+
       - name: Install Reader Frontend
         run: npm install --prefix wn-rajar-ms_reader/Frontend
 
